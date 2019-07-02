@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f38955f860b84904b74418a42632fe8, type: 3}
+  m_Name: Failure
+  m_EditorClassIdentifier: 
+  channel: {fileID: 243862871957214164, guid: 5d0fe66ec97e44aa995a232b3c2242ec, type: 2}
+  clips:
+  - {fileID: 8300000, guid: 56b3bd38ee98a45d6bd1a855eb0f4b97, type: 3}
+  pitchMode: 0
+  pitchFixed: 1
+  halftonesRandom: 1
+  halftonesVariations: 11
+  pitchRange: {x: 0.9, y: 1.2}
+  volumeMode: 0
+  volumeFixed: 0.5
+  volumeRange: {x: 0.1, y: 0.3}
+  isAmbientLoop: 0
+  ambientFadeInSeconds: 4
+  ambientFadeOutSeconds: 2

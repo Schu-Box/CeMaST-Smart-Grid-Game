@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3c323a85b654f0cb7b46d3bf133045, type: 3}
+  m_Name: Refrigerator 3
+  m_EditorClassIdentifier: 
+  applianceName: SmartTech Refrigerator
+  sprite: {fileID: 21300000, guid: 4e42cd108cf05429db795b91b9cefd90, type: 3}
+  cost: 1800
+  kwhPerMonth: 566
+  applianceType: 3
