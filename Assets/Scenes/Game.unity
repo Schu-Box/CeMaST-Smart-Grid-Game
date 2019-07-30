@@ -3610,7 +3610,7 @@ Prefab:
     - target: {fileID: 224970573080232026, guid: 322462a672cd04a91bef14eec2d67d5b,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -6.7999883
+      value: -6.799988
       objectReference: {fileID: 0}
     - target: {fileID: 224970573080232026, guid: 322462a672cd04a91bef14eec2d67d5b,
         type: 2}
@@ -5201,7 +5201,7 @@ Prefab:
     - target: {fileID: 224970573080232026, guid: 322462a672cd04a91bef14eec2d67d5b,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -7.299987
+      value: -7.299988
       objectReference: {fileID: 0}
     - target: {fileID: 224970573080232026, guid: 322462a672cd04a91bef14eec2d67d5b,
         type: 2}
@@ -9988,6 +9988,7 @@ MonoBehaviour:
   rightCycleArrow: {fileID: 796631832}
   constructionTitleText: {fileID: 1463005744}
   constructWindFarmButton: {fileID: 950052070}
+  constructionButtonHighlight: {fileID: 669027630}
   constructFarmButtonText: {fileID: 858925587}
   constructWindFarmPanel: {fileID: 1401498548}
   neighborContributionText: {fileID: 864973246}
