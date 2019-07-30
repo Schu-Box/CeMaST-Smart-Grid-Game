@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour {
 	[Header("Construct Wind Farm")]
 	public TextMeshProUGUI constructionTitleText;
 	public ButtonController constructWindFarmButton;
+	public GlowingHighlight constructionButtonHighlight;
 	public TextMeshProUGUI constructFarmButtonText;
 	public GameObject constructWindFarmPanel;
 	public TextMeshProUGUI neighborContributionText;
@@ -137,6 +138,7 @@ public class GameManager : MonoBehaviour {
 	private bool metAllNeighbors = false;
 	private bool startedWindFarmConstruction = false;
 	private bool convincedAllNeighbors = false;
+	private bool finalInteractionComplete = false;
 	private int promotionIncome = 500;
 
 	private bool choseWind = false;
@@ -169,6 +171,7 @@ public class GameManager : MonoBehaviour {
 		leftCycleArrow.gameObject.SetActive(false);
 		rightCycleArrow.gameObject.SetActive(false);
 		constructWindFarmButton.gameObject.SetActive(false);
+		constructionButtonHighlight.gameObject.SetActive(false);
 		successStreakPanel.SetActive(false);
 		
 		successHighlight.enabled = false;
@@ -195,11 +198,6 @@ public class GameManager : MonoBehaviour {
 
 		gameOverOff = gameOverPanel.transform.position;
 		gameOverOn = Vector3.zero;
-
-		/*
-		Debug.Log("DEBUG MODE ENABLED");
-		playerPromoted = true;
-		*/
 
 		startPanel.SetActive(true);
 
@@ -382,8 +380,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void SetBlueprintRooms() {
-		Debug.Log("Setting the blueprint ROOMS");
-
 		for(int i = 0; i < blueprintPanel.transform.childCount; i++) {
 			blueprintRoomList.Add(blueprintPanel.transform.GetChild(i).GetComponent<BlueprintRoomController>());
 			blueprintRoomList[i].SetRoom(playerHome.GetRoomList()[i]);
@@ -399,7 +395,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OpenBlueprint() {
-		Debug.Log("Opening the Blueprint");
 		audioManager.Play("Click");
 
 		if(frontDoorInteractable) {
@@ -657,7 +652,6 @@ public class GameManager : MonoBehaviour {
 	public void AdvanceMonth() {
 		audioManager.Play("Click");
 
-		Debug.Log("Advanced to next month");
 		CloseAppliance();
 
 		discussionGroup.SetActive(false);
@@ -836,10 +830,12 @@ public class GameManager : MonoBehaviour {
 		blueprintButton.gameObject.SetActive(true);
 
 		currentNeighbor = null;
+		currentDiscussion = null;
 
 		if(startedWindFarmConstruction) {
 			CheckForConvincing();
 		}
+		
 
 		/*
 		for(int i = 0; i < neighborhoodHouses.Count; i++) { //This is also dumb af
@@ -859,14 +855,6 @@ public class GameManager : MonoBehaviour {
 		SetBlueprintButtonHighlight();
 		currentRoom.TurnOnLights();
 		AdjustDarkness();
-
-		currentDiscussion = null;
-
-		/*
-		if(!playerPromoted) {
-			frontDoorInteractable = false;
-		}
-		*/
 
 		SetFrontDoorInteraction();
 	}
@@ -912,7 +900,10 @@ public class GameManager : MonoBehaviour {
 			} else { //If the player has already been promoted, they can leave whenevs
 				frontDoorInteractable = true;
 
-				if(metAllNeighbors && !startedWindFarmConstruction) {
+				if(convincedAllNeighbors && !finalInteractionComplete) {
+					currentNeighbor = smartCompanyEmployee;
+					currentDiscussion = discussionManager.GetDiscussion("endGame");
+				} else if(metAllNeighbors && !startedWindFarmConstruction) {
 					currentDiscussion = discussionManager.GetDiscussion("startConstruction");
 				} else {
 					currentDiscussion = null;
@@ -947,7 +938,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void LeaveHouse() {
-		Debug.Log("Leaving the house");
 		playerHome.gameObject.SetActive(false);
 
 		blueprintButton.gameObject.SetActive(false);
@@ -963,6 +953,11 @@ public class GameManager : MonoBehaviour {
 
 		if(metAllNeighbors) {
 			constructWindFarmButton.gameObject.SetActive(true);
+
+			if(convincedAllNeighbors) {
+				constructionButtonHighlight.gameObject.SetActive(true);
+				constructionButtonHighlight.ActivateGlow();
+			}
 		}
 	}
 
@@ -978,6 +973,7 @@ public class GameManager : MonoBehaviour {
 		GoToRoom(playerHome.GetRoom("Living Room"));
 
 		constructWindFarmButton.gameObject.SetActive(false);
+		constructionButtonHighlight.gameObject.SetActive(false);
 	}
 
 	public void GoToHouse(GameObject house) {
@@ -1049,8 +1045,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void InteractWithNeighbor(Neighbor neighbor) {
-		Debug.Log("Interacting with " + neighbor.name);
-
 		audioManager.Play("Door");
 
 		currentNeighbor = neighbor;
@@ -1059,6 +1053,7 @@ public class GameManager : MonoBehaviour {
 		rightCycleArrow.gameObject.SetActive(false);
 
 		constructWindFarmButton.gameObject.SetActive(false);
+		constructionButtonHighlight.gameObject.SetActive(false);
 
 		if(neighbor == player) {
 			ReturnToHouse();
@@ -1156,7 +1151,6 @@ public class GameManager : MonoBehaviour {
 		typewriterDiscussionText.SetStringAndStart(responseString);
 
 		if(response.key == "promotion") {
-			Debug.Log("Player is promoted!");
 			playerPromoted = true;
 		}
 
@@ -1174,6 +1168,8 @@ public class GameManager : MonoBehaviour {
 			}
 
 			constructFarmButtonText.text = "Construct " + farmTypeString;
+		} else if(response.key == "endGame") {
+			finalInteractionComplete = true;
 		}
 
 		for(int i = 0; i < discussionResponseButtonHolder.childCount; i++) {
@@ -1318,6 +1314,8 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if(allNeighborsConributing) {
+			convincedAllNeighbors = true;
+
 			string typeString = "";
 			if(choseSolar) {
 				typeString = "solar";
@@ -1327,8 +1325,6 @@ public class GameManager : MonoBehaviour {
 				typeString = "biomass";
 			}
 			discussionManager.AddFinalDiscussion(typeString);
-
-			currentDiscussion = discussionManager.GetDiscussion("endGame");
 		}
 	}
 
@@ -1364,7 +1360,6 @@ public class GameManager : MonoBehaviour {
 
 
 		int netChangePerMonth = player.monthData[month].incomeThisMonth - player.monthData[month].energyBillThisMonth;
-		Debug.Log("Net change: " + netChangePerMonth);
 
 		int moneyNeeded = constructionCost - player.GetWealth();
 
@@ -1484,7 +1479,6 @@ public class GameManager : MonoBehaviour {
 
 	public static bool IsPointerOverGameObject() {
 		if(EventSystem.current.IsPointerOverGameObject()) {
-			Debug.Log("POINTER OVER GAME OBJECT");
 
 			return true;
 		}
